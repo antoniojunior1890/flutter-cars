@@ -1,3 +1,5 @@
+import 'package:cars/pages/home_page.dart';
+import 'package:cars/utils/nav.dart';
 import 'package:cars/widgets/app_button.dart';
 import 'package:cars/widgets/app_text.dart';
 import 'package:flutter/material.dart';
@@ -77,6 +79,8 @@ class _LoginPageState extends State<LoginPage> {
     String senha = _tSenha.text;
 
     print("Login: $login, Senha: $senha");
+
+    push(context, HomePage());
   }
 
   String _validatorLogin(String text) {
