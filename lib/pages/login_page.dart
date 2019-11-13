@@ -1,4 +1,5 @@
 import 'package:cars/pages/home_page.dart';
+import 'package:cars/pages/login_api.dart';
 import 'package:cars/utils/nav.dart';
 import 'package:cars/widgets/app_button.dart';
 import 'package:cars/widgets/app_text.dart';
@@ -70,7 +71,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  _onClickLogin() {
+  _onClickLogin() async {
     if (!_formKey.currentState.validate()) {
       return;
     }
@@ -80,7 +81,13 @@ class _LoginPageState extends State<LoginPage> {
 
     print("Login: $login, Senha: $senha");
 
-    push(context, HomePage());
+    bool ok = await LoginApi.login(login, senha);
+
+    if (ok) {
+      push(context, HomePage());
+    } else {
+      print("Login incorreto");
+    }
   }
 
   String _validatorLogin(String text) {
