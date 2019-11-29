@@ -1,34 +1,39 @@
 import 'dart:convert';
 
+import 'package:cars/pages/api_response.dart';
+import 'package:cars/pages/user.dart';
 import 'package:http/http.dart' as http;
 
 class LoginApi {
-  static Future<bool> login(String login, String senha) async {
-    var url = 'http://carros-springboot.herokuapp.com/api/v2/login';
+  static Future<ApiResponse<User>> login(String login, String senha) async {
+    try {
+      var url = 'http://carros-springboot.herokuapp.com/api/v2/login';
 
-    Map<String, String> headers = {
-      "Content-Type": "application/json"
-    };
+      Map<String, String> headers = {"Content-Type": "application/json"};
 
-    Map params = {
-      "username": login,
-      "password": senha,
-    };
+      Map params = {
+        "username": login,
+        "password": senha,
+      };
 
-    String paramsString = json.encode(params);
+      String paramsString = json.encode(params);
 
-    var response = await http.post(url, body: paramsString, headers: headers);
-    print('Response status: ${response.statusCode}');
-    print('Response body: ${response.body}');
+      var response = await http.post(url, body: paramsString, headers: headers);
+      print('Response status: ${response.statusCode}');
+      print('Response body: ${response.body}');
 
-    Map mapResponse = json.decode(response.body);
+      Map mapResponse = json.decode(response.body);
 
-    String name = mapResponse["nome"];
-    String email = mapResponse["email"];
+      if (response.statusCode == 200) {
+        final user = User.fromJson(mapResponse);
 
-    print("Nome: $name");
-    print("Email: $email");
+        return ApiResponse.ok(user);
+      }
 
-    return true;
+      return ApiResponse.error(mapResponse["error"]);
+    } catch (error, exception) {
+      print("Erro no login $error > $exception");
+      return ApiResponse.error("Não foi possivel fazer o login");
+    }
   }
 }
