@@ -22,6 +22,8 @@ class _LoginPageState extends State<LoginPage> {
 
   final _focusSenha = FocusNode();
 
+  bool _showProgress = false;
+
   @override
   void initState() {
     super.initState();
@@ -67,7 +69,11 @@ class _LoginPageState extends State<LoginPage> {
             SizedBox(
               height: 20,
             ),
-            AppButton("Login", onPressed: _onClickLogin)
+            AppButton(
+              "Login",
+              onPressed: _onClickLogin,
+              showProgress: _showProgress,
+            )
           ],
         ),
       ),
@@ -78,6 +84,10 @@ class _LoginPageState extends State<LoginPage> {
     if (!_formKey.currentState.validate()) {
       return;
     }
+
+    setState(() {
+      _showProgress = true;
+    });
 
     String login = _tLogin.text;
     String senha = _tSenha.text;
@@ -93,6 +103,10 @@ class _LoginPageState extends State<LoginPage> {
     } else {
       alert(context, response.msg);
     }
+
+    setState(() {
+      _showProgress = false;
+    });
   }
 
   String _validatorLogin(String text) {
